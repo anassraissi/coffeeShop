@@ -1,16 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { useAuth } from '../../context/AuthContext';
+import { toast } from 'react-toastify';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const router = useRouter();
-  const { login } = useAuth(); // Access login function from AuthContext
+  const { login } = useAuth(); // Access login function from AuthContext  
 
+  useEffect(() => {
+    const token = localStorage.getItem('user');
+    if (token) {
+      router.replace('/');
+    }
+  }, []);
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -19,14 +27,15 @@ const Login = () => {
         email,
         password,
       });
-
       if (response.status === 200) {
         const { token, user } = response.data;
         console.log(user);
     localStorage.setItem('token', token);
-    localStorage.setItem('userToken',user)
+    localStorage.setItem('user', JSON.stringify(user));
     login(user); // Set user data in context after successful login
     router.push('/'); // Red // Redirect to dashboard or desired page upon successful login
+    toast.success('User Log successfully!', { autoClose: 3000 });
+
       }
     } catch (error) {
       setError('Invalid email or password');

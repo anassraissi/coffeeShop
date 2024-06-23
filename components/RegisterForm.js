@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
 const RegisterForm = () => {
   const [firstName, setFirstName] = useState('');
@@ -23,8 +24,8 @@ console.log(email);
       });
 
       if (response.status === 201) {
+        toast.success('Registred successfully!', { autoClose: 3000 });
         // Redirect to login page after successful registration
-        router.push('/Login'); // Example route
       }
     } catch (error) {
       setError('Failed to register. Please try again.');

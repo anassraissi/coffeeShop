@@ -1,14 +1,19 @@
+// pages/products.js
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { Modal, Button, Form } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 import ProductCard from '../../components/ProductCard';
 import Layout from '../../components/Layout';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { useAuth } from '../../context/AuthContext';
+
 
 const Products = () => {
+  const { user } = useAuth();
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [quantity, setQuantity] = useState(1); // State for quantity input
+  const [quantity, setQuantity] = useState(1);
   const router = useRouter();
   const { category } = router.query;
 
@@ -18,9 +23,7 @@ const Products = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('/api/products', {
-        params: { categoryName: category },
-      });
+      const response = await axios.get('/api/products', { params: { categoryName: category } });
       setProducts(response.data);
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -33,13 +36,37 @@ const Products = () => {
 
   const handleCloseModal = () => {
     setSelectedProduct(null);
-    setQuantity(1); // Reset quantity when modal closes
+    setQuantity(1);
   };
 
-  const handleOrder = () => {
-    // Handle order logic here
-    console.log('Order placed for:', selectedProduct, 'Quantity:', quantity);
-    handleCloseModal();
+  const handleOrder = async () => {
+    if (!user) {
+      console.error('User not authenticated');
+      return;
+    }
+
+    const items = [{
+      productId: selectedProduct._id,
+      quantity,
+      unitPrice: selectedProduct.price,
+    }];
+    const totalPrice = selectedProduct.price * quantity;
+
+    try {
+      const response = await axios.post('/api/orders', {
+        userId: user._id,
+        items,
+        totalPrice,
+      });
+      if (response.data.success) {
+        toast.success('Order placed successfully!', { autoClose: 3000 });
+        handleCloseModal();
+      } else {
+        toast.error('Order placement failed: ' + response.data.message, { autoClose: 3000 });
+      }
+    } catch (error) {
+      toast.error('Error placing order: ' + error.message, { autoClose: 3000 });
+    }
   };
 
   return (
@@ -59,7 +86,6 @@ const Products = () => {
         </div>
       </div>
 
-      {/* Modal to display selected product details */}
       {selectedProduct && (
         <Modal show={true} onHide={handleCloseModal}>
           <Modal.Header closeButton>

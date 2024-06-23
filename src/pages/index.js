@@ -10,14 +10,12 @@ import { useRouter } from "next/router";
 
 const inter = Inter({ subsets: ["latin"] });
 
-
 export default function Home() {
   const { setUser } = useAuth();
   const router = useRouter();
 
   useEffect(()=>{
-    const token = localStorage.getItem('userToken');
-
+    const token = localStorage.getItem('user');
     (token)? setUser(token) : router.replace('/Login');
 
       // Initialize user context with the authenticated user based on the token
