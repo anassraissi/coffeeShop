@@ -105,3 +105,42 @@ a {
     color-scheme: dark;
   }
 }
+/* styles/globals.css */
+html, body, #__next {
+  height: 100%;
+  margin: 0;
+}
+
+#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.content-wrap {
+  flex: 1;
+}
+
+.footer {
+  background-color: #f8f9fa !important;
+  text-align: center;
+  padding: 1rem 0; /* Adjust this value to change the height */
+}
+
+.footer a {
+  color: rgba(0, 0, 0, 0.5) !important;
+}
+
+.footer .container {
+  padding: 0.5rem 0; /* Adjust this value to change the height */
+}
+
+.footer .text-center {
+  padding: 0.5rem 0; /* Adjust this value to change the height */
+}

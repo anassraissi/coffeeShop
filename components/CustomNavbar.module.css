@@ -1,0 +1,23 @@
+/* components/CustomNavbar.module.css */
+.navbar {
+    background-color: #f8f9fa;
+    /* Add component-specific styles */
+  }
+  
+  .nav-link {
+    color: #333;
+    /* Add more styles */
+  }
+  
+  /* Example custom styles */
+.modal-title {
+  color: #007bff; /* Blue color for modal title */
+}
+
+.modal-body {
+  background-color: #f8f9fa; /* Light gray background for modal body */
+}
+
+.modal-footer {
+  border-top: 1px solid #dee2e6; /* Gray border for modal footer */
+}
